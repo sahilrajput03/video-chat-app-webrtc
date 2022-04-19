@@ -4,13 +4,15 @@ import Peer from 'peerjs' // docs https://www.npmjs.com/package/peerjs
 import './App.css'
 let log = console.log
 
-const socket = io('ws://localhost:8080/')
+// const socket = io('ws://localhost:8080/')
+const socket = io('ws://192.168.18.3:8080/')
 // const socket = io('/') // from kyle
 
 // FROM peerjs docs: undefined => pick-an-id
 // undefined coz we wan't peerjs to create ids for us.
 const myPeer = new Peer(undefined, {
-	host: '/',
+	// host: '/',
+	host: '192.168.18.3',
 	port: 3001,
 })
 const peers = {}
