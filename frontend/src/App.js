@@ -4,15 +4,19 @@ import Peer from 'peerjs' // docs https://www.npmjs.com/package/peerjs
 import './App.css'
 let log = console.log
 
+// let HOST = '192.168.18.3' // local
+let HOST = '124.253.36.113'// public
+// BROWSE APP: http://124.253.36.113:3000/room1
+
 // const socket = io('ws://localhost:8080/')
-const socket = io('ws://192.168.18.3:8080/')
+const socket = io(`ws://${HOST}:8080/`) // this is passed to client to make future requests at.
 // const socket = io('/') // from kyle
 
 // FROM peerjs docs: undefined => pick-an-id
 // undefined coz we wan't peerjs to create ids for us.
 const myPeer = new Peer(undefined, {
-	// host: '/',
-	host: '192.168.18.3',
+	// host: '/', // from kyle
+	host: HOST,
 	port: 3001,
 })
 const peers = {}
@@ -81,7 +85,7 @@ function App() {
 
 	return (
 		<div className='App'>
-			<h1>Hello, from my-fresh-app.</h1>
+			<h1>Vide chat app</h1>
 			{/* <div id='video-grid'></div> */}
 
 			<div id='video-grid'> </div>
