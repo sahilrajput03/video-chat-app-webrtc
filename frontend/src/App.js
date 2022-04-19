@@ -8,30 +8,34 @@ let log = console.log
 // let HOST = '192.168.18.3' // local
 // let HOST = '49.156.97.84' // public
 let HOST = 'video-app-backend.herokuapp.com' // public
+let socket
+// const socket = io('/') // from kyle
 
 let isHeroku = false
 let PORT = 8080 // HELPFUL FOR LOCAL TESTING AND ON PUBLIC IP TESTING.
 if (HOST.includes('herokuapp.com')) {
 	PORT = 80
 	isHeroku = true
+
+	socket = io(`wss://${HOST}/`) // this is passed to client to make future requests at.
+	// NOTE THE wss  ^^^^^ change above, that was critically necessary to make requests work in broser with the backend for webrtc.
+	// ^^^^ All this works locally and on github pages very well.
+} else {
+	// socket = io('ws://localhost:8080/')
+	socket = io(`ws://${HOST}:${PORT}/`) // this is passed to client to make future requests at.
 }
 // BROWSE APP: http://124.253.36.113:3000/room1
-
-// const socket = io('ws://localhost:8080/')
-// const socket = io(`ws://${HOST}:${PORT}/`) // this is passed to client to make future requests at.
-const socket = io(`ws://${HOST}/`) // this is passed to client to make future requests at.
-// const socket = io('/') // from kyle
 
 // FROM peerjs docs: undefined => pick-an-id
 // undefined coz we wan't peerjs to create ids for us.
 const myPeer = new Peer(undefined, {
 	// host: '/', // from kyle
 	host: HOST,
-	secure: true,// to fix ``RR_SSL_PROTOCOL_ERROR`` from peerjs endpoint.
+	secure: true, // to fix ``RR_SSL_PROTOCOL_ERROR`` from peerjs endpoint.
 	// port: 3001, // I was using 300 port with peerjs cli usage i.e., `peerjs --port 3001`
 
 	// port: 8080, // NOW I AM USING peerjs mounted on expresjs itself! Yikes! IT WORKS!
-	// TEST: not using port for heroku app deployment for `letsjoin.ml`.
+	// TEST => SUCCESSFUL: DONT use port at all for heroku app deployment for `letsjoin.ml`.
 })
 let peers = {}
 
