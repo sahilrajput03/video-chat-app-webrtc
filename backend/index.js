@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
+const {ExpressPeerServer} = require('peer')
 const http = require('http')
+
 // const fs = require('fs')
 // const path = require('path')
 
@@ -75,6 +77,19 @@ io.on('connection', (socket) => {
 	})
 })
 
-server.listen(PORT, function () {
+const server2 = server.listen(PORT, function () {
 	console.log('express running on', PORT, '...')
 })
+
+const peerServer = ExpressPeerServer(server2, {
+	debug: true,
+	allow_discovery: true,
+})
+
+// src: https://github.com/peers/peerjs-server/issues/86#issuecomment-913825766
+app.use('/', a, peerServer) // Enable peer server!
+// ALERTY, ^^ DONT CHANGE THE PATH!!
+function a(req, res, next) {
+	log('path:', req.path, 'req.query:', req.query)
+	next()
+}
