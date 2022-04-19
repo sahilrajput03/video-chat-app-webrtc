@@ -46,6 +46,7 @@ io.on('connection', (socket) => {
 			// socket.to(roomId).broadcast.emit('user-connected', userId)
 
 			socket.on('disconnect', () => {
+				log('disconnect event fired..', userId)
 				socket.to(roomId).emit('user-disconnected', userId)
 				// not working idk why..!
 				// socket.to(roomId).broadcast.emit('user-disconnected', userId)

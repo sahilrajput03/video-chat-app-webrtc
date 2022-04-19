@@ -1,12 +1,12 @@
-import {HashRouter, Route, Routes, Link} from 'react-router-dom'
+import {HashRouter, Route, Routes, Link, useNavigate} from 'react-router-dom'
 import {io} from 'socket.io-client' // docs https://socket.io/docs/v4/client-api/
 import {useState, useEffect, useRef} from 'react'
 import Peer from 'peerjs' // docs https://www.npmjs.com/package/peerjs
 import './App.css'
 let log = console.log
 
-let HOST = '192.168.18.3' // local
-// let HOST = '124.253.36.113' // public
+// let HOST = '192.168.18.3' // local
+let HOST = '124.253.36.113' // public
 // BROWSE APP: http://124.253.36.113:3000/room1
 
 // const socket = io('ws://localhost:8080/')
@@ -20,7 +20,7 @@ const myPeer = new Peer(undefined, {
 	host: HOST,
 	port: 3001,
 })
-const peers = {}
+let peers = {}
 
 // # worked with fast-refresh-sideffect
 // const myVideo = document.createElement('video')
@@ -47,6 +47,7 @@ function App() {
 				<ul>
 					<li>
 						<Link to='/'>Home</Link>
+						{/* ^^ this does't redirect to home sometimes. yucky!!*/}
 					</li>
 					<li>
 						<Link to='/room/room1'>Go to Room 1</Link>
@@ -77,6 +78,7 @@ myPeer.on('open', (id) => {
 	log('::open::callback::peerjs::got userId peerjs:', userId)
 })
 
+let currentCall
 const Room = () => {
 	log('rendered room comp..')
 	const videoRef = useRef(null)
@@ -85,10 +87,32 @@ const Room = () => {
 		videoGrid = document.getElementById('video-grid')
 		// Join a room ~Sahil
 		log('ROOM MOUNT: ')
+
+		// (work real good!)MANUALLY CONNECTING TO SOCKET IS REQUIRED COZ I AM DISCONNECTING FROM SOCKET ON ROOM COMPONENT DISMOUNT, so remounting the component would require to reconnect to socket.
+		socket.connect()
+
+		// we are ensuring that when any connected user leaves the room, the connection should be closed.
+		socket.on('user-disconnected', (userId) => {
+			log('->>EVENT: user-disconnected')
+			if (peers[userId]) {
+				peers[userId].close()
+				peers[userId] = false
+				log('GOOD DAY CLOSING SUCCESSFUL USING ID!!')
+			}
+			{
+				log(':( BAD DAY CLOSING SUCCESSFUL without USING ID!!')
+			}
+		})
+
 		return () => {
 			log('ROOM UNMOUNTED: ')
 			log('SOCKET DICONNECTED')
 			socket.disconnect()
+
+			//(::WORK WELL!::) this is to remove old event hadnler which we bind so we need to remove them so that if later the user connects to other room or same room, he won't get previous handlers called. src: https://github.com/peers/peerjs/issues/331#issuecomment-477572101
+			myPeer.off('call')
+			// myPeer.off('stream') // this is not checked though.
+			peers = {}
 		}
 	}, [])
 
@@ -96,6 +120,14 @@ const Room = () => {
 		getVideo()
 
 		log('effect..')
+		return () => {
+			log('effect unmounted!!')
+
+			// TODO
+			// call.off('stream')
+			// currentCall.off('stream')
+			log('currentCall', currentCall)
+		}
 	}, [videoRef])
 
 	const getVideo = () => {
@@ -106,8 +138,18 @@ const Room = () => {
 				video.srcObject = stream
 				video.play()
 
-				log(`called mypeer.call 1`)
+				log(`REGISTER CALL RECEIVING HANDLER!`)
 				myPeer.on('call', (call) => {
+					if (peers[call.peer]) {
+						// i.e., if we get multiple request for a single user then we don't care for newer calls, fixes the multiple other person joined calles to be fixed.
+						log('1. prevented duplicate call addition of already existing user..')
+						return
+					}
+
+					// assign all calls to peers object so we can cancel calls at the time undoing side effects on component unmount.
+					// peer is the peer id
+					peers[call.peer] = call
+
 					log('got a call.. yo!!')
 					// this gets us the video of new user.
 					call.answer(stream)
@@ -117,10 +159,16 @@ const Room = () => {
 					call.on('stream', (userVideoStream) => {
 						addVideoStream(video, userVideoStream)
 					})
+
+					call.on('close', () => {
+						log('::::CLOSE:::HANDLE:::CALLED:: will remove the video element.')
+						video.remove()
+					})
+					window.currentCall = call // assigning so we can clear the handler on component unmount.
 				})
 
-				const createRoom = () => {
-					log('::>>::inside createRoom function:')
+				const joinRoomRecursive = () => {
+					log('::>>::inside joinRoom function:')
 					if (userId) {
 						log('::ROOM CREATE:: (userId peerjs):', userId)
 						socket.emit('join-room', ROOM_ID, userId)
@@ -129,14 +177,22 @@ const Room = () => {
 						log('REGISTERED USER-CONNECTED HANDLER..')
 						socket.on('user-connected', (userId) => {
 							log('user connected:', userId)
+
+							if (peers[userId]) {
+								// i.e., if we get multiple request for a single user then we don't care for newer calls, fixes the multiple other person joined calles to be fixed.
+								log('2. prevented duplicate call addition of already existing user..')
+								// SO WE WILL NOT CONNECT TO A USER WITH EXISTING PEERID.
+								return
+							}
+
 							connectToNewUser(userId, stream)
 						})
 					} else {
-						log('calling createRoom again.. in 1 seconds')
-						setTimeout(1000, createRoom)
+						log('calling joinRoom again..')
+						setTimeout(1000, joinRoomRecursive)
 					}
 				}
-				createRoom()
+				joinRoomRecursive()
 			})
 			.catch((err) => {
 				console.error('error:', err)
@@ -146,24 +202,23 @@ const Room = () => {
 	return (
 		<>
 			<div id='video-grid'> </div>
-
 			<video ref={videoRef} className='player' />
+			Me (^^^)
 			<button
 				onClick={() => {
 					socket.disconnect()
 				}}
 				children='Manual Disconnect socket'
 			/>
-
 			{/* <video onCanPlay={() => paintToCanvas()} ref={videoRef} className='player' />
 			 */}
 		</>
 	)
 }
 
-socket.on('user-connected', (userId) => {
-	log(' TETSING:USER CONNECTED: EVENT:')
-})
+// socket.on('user-connected', (userId) => {
+// 	log(' TETSING:USER CONNECTED: EVENT:')
+// })
 
 function connectToNewUser(userId, stream) {
 	log('::f::connectToNewUser function called..')
@@ -180,17 +235,14 @@ function connectToNewUser(userId, stream) {
 	})
 
 	peers[userId] = call
+	log('BALLE BALLE: new peers assigned:', userId)
 }
 
 // const ROOM_ID = 'a0a9832h0-aw0ho-i0032j' // should come from server via uuid generator
 // const ROOM_ID = window.location.pathname.slice(1) // should come from server via uuid generator
 const ROOM_ID = 'room1'
 const id = 10 // userId
-// we are ensuring that when any connected user leaves the room, the connection should be closed.
-socket.on('user-disconnected', (userId) => {
-	if (peers[userId]) peers[userId].close()
-})
-
+//
 // # worked with fast-refresh-sideffect (...temp testing with react..)
 function addVideoStream(video, stream) {
 	video.srcObject = stream
