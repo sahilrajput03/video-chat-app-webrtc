@@ -1,3 +1,3 @@
 #!/bin/bash
 set -x
-git push heroku hash-router:master
+git push -f heroku hash-router:master
