@@ -37,7 +37,7 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
 	socket.on('join-room', (roomId, userId) => {
-		console.log('got roomid:', roomId, 'and userId:', userId)
+		console.log('JOIN ROOM(server): got roomid:', roomId, 'and userId:', userId)
 		socket.join(roomId)
 
 		try {
@@ -50,7 +50,6 @@ io.on('connection', (socket) => {
 				// not working idk why..!
 				// socket.to(roomId).broadcast.emit('user-disconnected', userId)
 			})
-			log()
 		} catch (e) {
 			log('ERROR ~Sahil::', e.message)
 		}

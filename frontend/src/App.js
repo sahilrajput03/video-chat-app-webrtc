@@ -66,14 +66,25 @@ function App() {
 	)
 }
 
+let userId
+
+// The connection is opened at the time of page launch automatically and managed on its own. And you should register the below handler on the conneciton open event at top level only.
+// BCOZ: I tried to put below hander in Room component mount and it resulted in never calling of this handler then.
+myPeer.on('open', (id) => {
+	// this should send to server..
+	// socket.emit('join-room', ROOM_ID, id) // i would join a room only when room component is mounted..
+	userId = id
+	log('::open::callback::peerjs::got userId peerjs:', userId)
+})
+
 const Room = () => {
 	log('rendered room comp..')
 	const videoRef = useRef(null)
-	// const photoRef = useRef(null) // this is more like a frame in a video.
 
 	useEffect(() => {
 		videoGrid = document.getElementById('video-grid')
-		log('origianl videoGrid', videoGrid)
+		// Join a room ~Sahil
+		log('ROOM MOUNT: ')
 	}, [])
 
 	useEffect(() => {
@@ -90,6 +101,7 @@ const Room = () => {
 				video.srcObject = stream
 				video.play()
 
+				log(`called mypeer.call 1`)
 				myPeer.on('call', (call) => {
 					log('got a call.. yo!!')
 					// this gets us the video of new user.
@@ -102,11 +114,24 @@ const Room = () => {
 					})
 				})
 
-				// attach socket event
-				socket.on('user-connected', (userId) => {
-					log('user connected:', userId)
-					connectToNewUser(userId, stream)
-				})
+				const createRoom = () => {
+					log('::>>::inside createRoom function:')
+					if (userId) {
+						log('::ROOM CREATE:: (userId peerjs):', userId)
+						socket.emit('join-room', ROOM_ID, userId)
+
+						// register USER-CONNECTED socket event handler..
+						log('REGISTERED USER-CONNECTED HANDLER..')
+						socket.on('user-connected', (userId) => {
+							log('user connected:', userId)
+							connectToNewUser(userId, stream)
+						})
+					} else {
+						log('calling createRoom again..')
+						setTimeout(1000, createRoom)
+					}
+				}
+				createRoom()
 			})
 			.catch((err) => {
 				console.error('error:', err)
@@ -125,8 +150,14 @@ const Room = () => {
 	)
 }
 
+socket.on('user-connected', (userId) => {
+	log(' TETSING:USER CONNECTED: EVENT:')
+})
+
 function connectToNewUser(userId, stream) {
-	log('connectonewuser...')
+	log('::f::connectToNewUser function called..')
+
+	log(`called mypeer.call 2`)
 	const call = myPeer.call(userId, stream)
 	const video = document.createElement('video')
 	call.on('stream', (userVideoStream) => {
@@ -140,14 +171,9 @@ function connectToNewUser(userId, stream) {
 }
 
 // const ROOM_ID = 'a0a9832h0-aw0ho-i0032j' // should come from server via uuid generator
-const ROOM_ID = window.location.pathname.slice(1) // should come from server via uuid generator
-const id = 10 // userid
-
-myPeer.on('open', (id) => {
-	// this should send to server..
-	socket.emit('join-room', ROOM_ID, id)
-})
-
+// const ROOM_ID = window.location.pathname.slice(1) // should come from server via uuid generator
+const ROOM_ID = 'room1'
+const id = 10 // userId
 // we are ensuring that when any connected user leaves the room, the connection should be closed.
 socket.on('user-disconnected', (userId) => {
 	if (peers[userId]) peers[userId].close()
