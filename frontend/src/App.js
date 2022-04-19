@@ -26,7 +26,7 @@ const socket = io(`ws://${HOST}:${PORT}/`) // this is passed to client to make f
 const myPeer = new Peer(undefined, {
 	// host: '/', // from kyle
 	host: HOST,
-	// secure: false,// to fix ``RR_SSL_PROTOCOL_ERROR`` from peerjs endpoint.
+	secure: false,// to fix ``RR_SSL_PROTOCOL_ERROR`` from peerjs endpoint.
 	// port: 3001, // I was using 300 port with peerjs cli usage i.e., `peerjs --port 3001`
 
 	port: isHeroku ? 80 : 8080, // NOW I AM USING peerjs mounted on expresjs itself! Yikes! IT WORKS!
