@@ -6,11 +6,19 @@ import './App.css'
 let log = console.log
 
 // let HOST = '192.168.18.3' // local
-let HOST = '49.156.97.84' // public
+// let HOST = '49.156.97.84' // public
+let HOST = 'video-app-backend.herokuapp.com' // public
+
+let isHeroku = false
+let PORT = 8080 // HELPFUL FOR LOCAL TESTING AND ON PUBLIC IP TESTING.
+if (HOST.includes('herokuapp.com')) {
+	PORT = 80
+	isHeroku = true
+}
 // BROWSE APP: http://124.253.36.113:3000/room1
 
 // const socket = io('ws://localhost:8080/')
-const socket = io(`ws://${HOST}:8080/`) // this is passed to client to make future requests at.
+const socket = io(`ws://${HOST}:${PORT}/`) // this is passed to client to make future requests at.
 // const socket = io('/') // from kyle
 
 // FROM peerjs docs: undefined => pick-an-id
@@ -21,7 +29,7 @@ const myPeer = new Peer(undefined, {
 	// secure: false,// to fix ``RR_SSL_PROTOCOL_ERROR`` from peerjs endpoint.
 	// port: 3001, // I was using 300 port with peerjs cli usage i.e., `peerjs --port 3001`
 
-	port: 8080, // NOW I AM USING peerjs mounted on expresjs itself! Yikes! IT WORKS!
+	port: isHeroku ? 80 : 8080, // NOW I AM USING peerjs mounted on expresjs itself! Yikes! IT WORKS!
 })
 let peers = {}
 
