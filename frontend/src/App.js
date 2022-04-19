@@ -18,6 +18,7 @@ const socket = io(`ws://${HOST}:8080/`) // this is passed to client to make futu
 const myPeer = new Peer(undefined, {
 	// host: '/', // from kyle
 	host: HOST,
+	secure: false,// to fix ``RR_SSL_PROTOCOL_ERROR`` from peerjs endpoint.
 	port: 3001,
 })
 let peers = {}

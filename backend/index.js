@@ -6,7 +6,7 @@ const io = require('socket.io')(server, {
 	// cors fixing from: https://stackoverflow.com/a/64733801/10012446
 	cors: {
 		// IMPORATANT: Add your frontend url here to allow for cors issue:
-		origin: ['http://localhost:3000', 'http://192.168.18.3:3000',  'http://124.253.36.113:3000'],
+		origin: ['http://localhost:3000', 'http://192.168.18.3:3000',  'http://124.253.36.113:3000', 'http://letsjoin.ml', 'https://letsjoin.ml'],
 		methods: ['GET', 'POST'],
 		allowedHeaders: ['my-custom-header'],
 		credentials: true,
