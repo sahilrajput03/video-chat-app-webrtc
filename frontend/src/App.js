@@ -69,9 +69,7 @@ function App() {
 					<li>
 						<Link to='/room/room1'>Go to Room 1</Link>
 					</li>
-					<li>
-						<Link to='/room/room2'>Go to Room 2</Link>
-					</li>
+					{/* <li> <Link to='/room/room2'>Go to Room 2</Link> </li> */}
 				</ul>
 				<hr />
 				{/*<Route exact path='/' component={Home} /> */}
