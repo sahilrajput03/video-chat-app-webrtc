@@ -1,11 +1,12 @@
+import {HashRouter, Route, Routes, Link} from 'react-router-dom'
 import {io} from 'socket.io-client' // docs https://socket.io/docs/v4/client-api/
 import {useState, useEffect, useRef} from 'react'
 import Peer from 'peerjs' // docs https://www.npmjs.com/package/peerjs
 import './App.css'
 let log = console.log
 
-// let HOST = '192.168.18.3' // local
-let HOST = '124.253.36.113'// public
+let HOST = '192.168.18.3' // local
+// let HOST = '124.253.36.113' // public
 // BROWSE APP: http://124.253.36.113:3000/room1
 
 // const socket = io('ws://localhost:8080/')
@@ -38,6 +39,35 @@ const peers = {}
 let videoGrid
 const FRAME_RATE = 100
 function App() {
+	return (
+		<div className='App'>
+			<h1>Vide chat app</h1>
+
+			<HashRouter basename='/'>
+				<ul>
+					<li>
+						<Link to='/'>Home</Link>
+					</li>
+					<li>
+						<Link to='/room/room1'>Go to Room 1</Link>
+					</li>
+					<li>
+						<Link to='/room/room2'>Go to Room 2</Link>
+					</li>
+				</ul>
+				<hr />
+				{/*<Route exact path='/' component={Home} /> */}
+				<Routes>
+					<Route path='/' element={<div>Home page contents</div>} />
+					<Route path='/room/:roomId' element={<Room />} />
+				</Routes>
+			</HashRouter>
+		</div>
+	)
+}
+
+const Room = () => {
+	log('rendered room comp..')
 	const videoRef = useRef(null)
 	// const photoRef = useRef(null) // this is more like a frame in a video.
 
@@ -84,16 +114,14 @@ function App() {
 	}
 
 	return (
-		<div className='App'>
-			<h1>Vide chat app</h1>
-			{/* <div id='video-grid'></div> */}
-
+		<>
 			<div id='video-grid'> </div>
 
 			<video ref={videoRef} className='player' />
+
 			{/* <video onCanPlay={() => paintToCanvas()} ref={videoRef} className='player' />
 			 */}
-		</div>
+		</>
 	)
 }
 
