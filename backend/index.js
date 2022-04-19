@@ -1,12 +1,24 @@
 const express = require('express')
 const app = express()
 const http = require('http')
+// const fs = require('fs')
+// const path = require('path')
+
+// old
 const server = http.createServer(app)
+// NEW HTTPS
+// const server = require('https').createServer(
+// 	{
+// 		key: fs.readFileSync(path.join(__dirname, 'cert', 'key.pem')),
+// 		cert: fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem')),
+// 	},
+// 	app
+// )
 const io = require('socket.io')(server, {
 	// cors fixing from: https://stackoverflow.com/a/64733801/10012446
 	cors: {
 		// IMPORATANT: Add your frontend url here to allow for cors issue:
-		origin: ['http://localhost:3000', 'http://192.168.18.3:3000',  'http://124.253.36.113:3000', 'http://letsjoin.ml', 'https://letsjoin.ml'],
+		origin: ['http://localhost:3000', 'http://192.168.18.3:3000', 'http://124.253.36.113:3000', 'http://letsjoin.ml', 'https://letsjoin.ml'],
 		methods: ['GET', 'POST'],
 		allowedHeaders: ['my-custom-header'],
 		credentials: true,
