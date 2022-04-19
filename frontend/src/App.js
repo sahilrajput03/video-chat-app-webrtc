@@ -85,6 +85,11 @@ const Room = () => {
 		videoGrid = document.getElementById('video-grid')
 		// Join a room ~Sahil
 		log('ROOM MOUNT: ')
+		return () => {
+			log('ROOM UNMOUNTED: ')
+			log('SOCKET DICONNECTED')
+			socket.disconnect()
+		}
 	}, [])
 
 	useEffect(() => {
@@ -127,7 +132,7 @@ const Room = () => {
 							connectToNewUser(userId, stream)
 						})
 					} else {
-						log('calling createRoom again..')
+						log('calling createRoom again.. in 1 seconds')
 						setTimeout(1000, createRoom)
 					}
 				}
@@ -143,6 +148,12 @@ const Room = () => {
 			<div id='video-grid'> </div>
 
 			<video ref={videoRef} className='player' />
+			<button
+				onClick={() => {
+					socket.disconnect()
+				}}
+				children='Manual Disconnect socket'
+			/>
 
 			{/* <video onCanPlay={() => paintToCanvas()} ref={videoRef} className='player' />
 			 */}
@@ -164,6 +175,7 @@ function connectToNewUser(userId, stream) {
 		addVideoStream(video, userVideoStream)
 	})
 	call.on('close', () => {
+		log('::::CLOSE:::HANDLE:::CALLED:: will remove the video element.')
 		video.remove()
 	})
 
