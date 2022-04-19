@@ -26,7 +26,7 @@ const io = require('socket.io')(server, {
 })
 
 const cors = require('cors')
-const PORT = 8080
+const PORT = process.env.PORT || 8080
 
 // this is the site which we allow socket.io connections
 // io.set('origins', 'http://localhost:3000');
