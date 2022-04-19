@@ -6,7 +6,7 @@ import './App.css'
 let log = console.log
 
 // let HOST = '192.168.18.3' // local
-let HOST = '124.253.36.113' // public
+let HOST = '49.156.97.84' // public
 // BROWSE APP: http://124.253.36.113:3000/room1
 
 // const socket = io('ws://localhost:8080/')
