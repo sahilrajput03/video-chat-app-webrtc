@@ -23,3 +23,9 @@ Help refernce: [Kyle's Video chat app @ Youtube](https://youtu.be/DvlyzDZDEq4)
 1. Buildpack: [@Github](https://github.com/timanovsky/subdir-heroku-buildpack) : Read its readme to SETUP SIMPLY like 1 2 3.
 
 2. Source of above: https://stackoverflow.com/a/53221996/10012446
+
+# todo (pending)
+
+- Add microphone functionality (URGENT)
+- Add screenshare option to this app https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC/issues/47#issuecomment-1046939709)
+- Check out PR's for code improvements or other suggestions (https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC/pulls?q=is%3Apr+is%3Aopen+sort%3Aupdated-desc).
