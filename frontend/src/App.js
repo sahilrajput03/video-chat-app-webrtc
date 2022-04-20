@@ -147,7 +147,13 @@ const Room = () => {
 
 	const getVideo = () => {
 		navigator.mediaDevices
-			.getUserMedia({video: {width: 300}})
+			.getUserMedia({
+				video: {width: 300},
+				audio: {
+					sampleSize: 8,
+					echoCancellation: true,
+				},
+			})
 			.then((stream) => {
 				let video = videoRef.current // this is the reason that getVideo has to defined inside the component ~Sahil
 				video.srcObject = stream
