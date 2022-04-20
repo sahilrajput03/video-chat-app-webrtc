@@ -18,6 +18,7 @@ peerjs --port 3001
 ```
 
 Help refernce: [Kyle's Video chat app @ Youtube](https://youtu.be/DvlyzDZDEq4)
+[Kyle's Github Repo](https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 
 
 **Guide to publish a nested project folder serving to heroku:**
