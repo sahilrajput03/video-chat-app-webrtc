@@ -1,5 +1,7 @@
 # README
 
+Brose Project @ [https://letsjoin.ml](https://letsjoin.ml)
+
 Project insights: Frontend is hosted at this same repository from `docs` folder from the `hash-router` branch.
 
 ```bash
