@@ -20,13 +20,13 @@ Help refernce: [Kyle's Video chat app @ Youtube](https://youtu.be/DvlyzDZDEq4)
 
 2. Source of above: https://stackoverflow.com/a/53221996/10012446
 
-## todo (pending)
+## TODO
 
 - Add microphone functionality (URGENT)
 - Add screenshare option to this app https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC/issues/47#issuecomment-1046939709)
 - Check out PR's for code improvements or other suggestions (https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC/pulls?q=is%3Apr+is%3Aopen+sort%3Aupdated-desc).
 
-## old way of using peerjs (FYI:I am no longer using it this way)
+## Old way of using peerjs (FYI:I am no longer using it this way)
 
 ```bash
 # Using peer's cli way to setup a network is not required now coz I mounted peer on top of express server.
