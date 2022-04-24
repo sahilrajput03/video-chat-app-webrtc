@@ -21,7 +21,7 @@ Help refernce: [Kyle's Video chat app @ Youtube](https://youtu.be/DvlyzDZDEq4)
 [Kyle's Github Repo](https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 
 
-**Guide to publish a nested project folder serving to heroku:**
+#### Guide to publish a nested project folder serving to heroku:**
 
 1. Buildpack: [@Github](https://github.com/timanovsky/subdir-heroku-buildpack) : Read its readme to SETUP SIMPLY like 1 2 3.
 
