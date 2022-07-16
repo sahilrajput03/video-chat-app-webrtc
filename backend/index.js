@@ -16,6 +16,7 @@ const server = http.createServer(app)
 // 	},
 // 	app
 // )
+// @ts-ignore
 const io = require('socket.io')(server, {
 	// cors fixing from: https://stackoverflow.com/a/64733801/10012446
 	cors: {
@@ -82,6 +83,7 @@ const server2 = server.listen(PORT, function () {
 })
 
 const peerServer = ExpressPeerServer(server2, {
+	// @ts-ignore
 	debug: true,
 	allow_discovery: true,
 })

@@ -11,11 +11,11 @@ let HOST = 'video-app-backend.herokuapp.com' // public
 let socket
 // const socket = io('/') // from kyle
 
-let isHeroku = false
+// let isHeroku = false
 let PORT = 8080 // HELPFUL FOR LOCAL TESTING AND ON PUBLIC IP TESTING.
 if (HOST.includes('herokuapp.com')) {
 	PORT = 80
-	isHeroku = true
+	// isHeroku = true
 
 	socket = io(`wss://${HOST}/`) // this is passed to client to make future requests at.
 	// NOTE THE wss  ^^^^^ change above, that was critically necessary to make requests work in broser with the backend for webrtc.
@@ -54,23 +54,21 @@ let peers = {}
 // 	})
 
 let videoGrid
-const FRAME_RATE = 100
+// const FRAME_RATE = 100
 function App() {
 	return (
 		<div className='App'>
-			<h1>Vide chat app</h1>
+			<h1 className='title'>Mooz</h1>
 
 			<HashRouter basename='/'>
-				<ul>
-					<li>
-						<Link to='/'>Home</Link>
-						{/* ^^ this does't redirect to home sometimes. yucky!!*/}
-					</li>
-					<li>
-						<Link to='/room/room1'>Go to Room 1</Link>
-					</li>
-					{/* <li> <Link to='/room/room2'>Go to Room 2</Link> </li> */}
-				</ul>
+				<Link to='/' className='btn btn-home'>
+					Home
+				</Link>
+				{/* ^^ this does't redirect to home sometimes. yucky!!*/}
+				<Link to='/room/room1' className='btn'>
+					Go to Room 1
+				</Link>
+				{/* <li> <Link to='/room/room2'>Go to Room 2</Link> </li> */}
 				<hr />
 				{/*<Route exact path='/' component={Home} /> */}
 				<Routes>
@@ -94,9 +92,12 @@ myPeer.on('open', (id) => {
 })
 
 let currentCall
-const Room = () => {
-	log('rendered room comp..')
+const Room = (props) => {
 	const videoRef = useRef(null)
+	let navigate = useNavigate()
+
+	log('props in room:', {props})
+	log('rendered room comp..')
 
 	useEffect(() => {
 		videoGrid = document.getElementById('video-grid')
@@ -108,13 +109,13 @@ const Room = () => {
 
 		// we are ensuring that when any connected user leaves the room, the connection should be closed.
 		socket.on('user-disconnected', (userId) => {
+			alert('EVENT::user-disconnected')
 			log('->>EVENT: user-disconnected')
 			if (peers[userId]) {
 				peers[userId].close()
 				peers[userId] = false
 				log('GOOD DAY CLOSING SUCCESSFUL USING ID!!')
-			}
-			{
+			} else {
 				log(':( BAD DAY CLOSING SUCCESSFUL without USING ID!!')
 			}
 		})
@@ -125,6 +126,7 @@ const Room = () => {
 			socket.disconnect()
 
 			//(::WORK WELL!::) this is to remove old event hadnler which we bind so we need to remove them so that if later the user connects to other room or same room, he won't get previous handlers called. src: https://github.com/peers/peerjs/issues/331#issuecomment-477572101
+			// @ts-ignore
 			myPeer.off('call')
 			// myPeer.off('stream') // this is not checked though.
 			peers = {}
@@ -197,6 +199,8 @@ const Room = () => {
 						// register USER-CONNECTED socket event handler..
 						log('REGISTERED USER-CONNECTED HANDLER..')
 						socket.on('user-connected', (userId) => {
+							alert('EVENT::user-connected')
+
 							log('user connected:', userId)
 
 							if (peers[userId]) {
@@ -210,7 +214,7 @@ const Room = () => {
 						})
 					} else {
 						log('calling joinRoom again..')
-						setTimeout(1000, joinRoomRecursive)
+						setTimeout(joinRoomRecursive, 1000)
 					}
 				}
 				joinRoomRecursive()
@@ -220,17 +224,19 @@ const Room = () => {
 			})
 	}
 
+	const disconnect = () => {
+		socket.disconnect()
+		navigate('/')
+	}
 	return (
 		<>
-			<div id='video-grid'> </div>
-			<video ref={videoRef} className='player' />
-			Me (^^^)
-			<button
-				onClick={() => {
-					socket.disconnect()
-				}}
-				children='Manual Disconnect socket'
-			/>
+			<div id='video-grid'>
+				<div>
+					<video ref={videoRef} className='player' />
+					<button onClick={disconnect}>Disconnect</button>
+				</div>
+			</div>
+
 			{/* <video onCanPlay={() => paintToCanvas()} ref={videoRef} className='player' />
 			 */}
 		</>
