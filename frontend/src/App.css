@@ -3,15 +3,18 @@
 }
 
 /* from kyle */
-#video-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, 300px);
-	grid-auto-rows: 300px;
+#video-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
 }
 video {
-	width: 100%;
-	height: 100%;
+	width: 300px;
+	aspect-ratio: 1;
+	border-radius: 50px;
 	object-fit: cover;
+	margin: 10px;
 }
 
 .btn {
@@ -30,6 +33,17 @@ video {
 	background: #e04c68;
 }
 
+.btn-disconnect {
+	padding: 30px;
+	min-width: 300px;
+	border-radius: 50px;
+	font-size: 2rem;
+	font-weight: 1000;
+	background: grey;
+	color: ghostwhite;
+	margin: 50px;
+}
+
 .title {
 	font-family: monospace;
 }
@@ -38,4 +52,9 @@ video {
 * {
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	-webkit-tap-highlight-color: transparent; /* For some Androids */
+}
+
+.hero-text {
+	font-size: 4rem;
+	font-family: system-ui;
 }

@@ -1,9 +1,19 @@
 import {HashRouter, Route, Routes, Link, useNavigate} from 'react-router-dom'
 import {io} from 'socket.io-client' // docs https://socket.io/docs/v4/client-api/
-import {useState, useEffect, useRef} from 'react'
+import {useEffect, useRef} from 'react'
 import Peer from 'peerjs' // docs https://www.npmjs.com/package/peerjs
 import './App.css'
 let log = console.log
+
+/**
+ * Important seeming issue and PRs
+ * 1. https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC/issues/21#issuecomment-692056271
+ * 2. https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC/issues/14
+ * 3. https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC/pull/39/files
+ * 4. https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC/pull/65/files
+ *
+ * ALL PRS: https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC/pulls
+ */
 
 // let HOST = '192.168.18.3' // local
 // let HOST = '49.156.97.84' // public
@@ -72,12 +82,16 @@ function App() {
 				<hr />
 				{/*<Route exact path='/' component={Home} /> */}
 				<Routes>
-					<Route path='/' element={<div>Home page contents</div>} />
+					<Route path='/' element={<Home />} />
 					<Route path='/room/:roomId' element={<Room />} />
 				</Routes>
 			</HashRouter>
 		</div>
 	)
+}
+
+const Home = () => {
+	return <div className='hero-text'>Home page contents</div>
 }
 
 let userId
@@ -92,6 +106,7 @@ myPeer.on('open', (id) => {
 })
 
 let currentCall
+let _stream
 const Room = (props) => {
 	const videoRef = useRef(null)
 	let navigate = useNavigate()
@@ -100,7 +115,7 @@ const Room = (props) => {
 	log('rendered room comp..')
 
 	useEffect(() => {
-		videoGrid = document.getElementById('video-grid')
+		videoGrid = document.getElementById('video-container')
 		// Join a room ~Sahil
 		log('ROOM MOUNT: ')
 
@@ -109,7 +124,7 @@ const Room = (props) => {
 
 		// we are ensuring that when any connected user leaves the room, the connection should be closed.
 		socket.on('user-disconnected', (userId) => {
-			alert('EVENT::user-disconnected')
+			// alert('EVENT::user-disconnected')
 			log('->>EVENT: user-disconnected')
 			if (peers[userId]) {
 				peers[userId].close()
@@ -148,6 +163,7 @@ const Room = (props) => {
 	}, [videoRef])
 
 	const getVideo = () => {
+		// alert('getVideo ::FUNCTION CALLED::')
 		navigator.mediaDevices
 			.getUserMedia({
 				video: {width: 300},
@@ -157,13 +173,18 @@ const Room = (props) => {
 				},
 			})
 			.then((stream) => {
+				_stream = stream // bcoz we would need to close webcam and mic access manually on disconnect button event or navigating to home component directy from the Room component.
+				// alert('got stream')
 				let video = videoRef.current // this is the reason that getVideo has to defined inside the component ~Sahil
+				video.muted = true
 				video.srcObject = stream
 				video.play()
 
 				log(`REGISTER CALL RECEIVING HANDLER!`)
 				myPeer.on('call', (call) => {
 					if (peers[call.peer]) {
+						alert('PREVENTED DUPLICATE CALL ADDITION')
+						// alert('PREVENTED DUPLICATE')
 						// i.e., if we get multiple request for a single user then we don't care for newer calls, fixes the multiple other person joined calles to be fixed.
 						log('1. prevented duplicate call addition of already existing user..')
 						return
@@ -180,13 +201,17 @@ const Room = (props) => {
 					// we send video to our newly connected user
 					const video = document.createElement('video')
 					call.on('stream', (userVideoStream) => {
+						log('RECEIVING CALL NOWWWW')
+						// alert('ADD VIDEO STREAM')
 						addVideoStream(video, userVideoStream)
 					})
 
 					call.on('close', () => {
 						log('::::CLOSE:::HANDLE:::CALLED:: will remove the video element.')
 						video.remove()
+						delete peers[call.peer]
 					})
+					// @ts-ignore
 					window.currentCall = call // assigning so we can clear the handler on component unmount.
 				})
 
@@ -199,7 +224,7 @@ const Room = (props) => {
 						// register USER-CONNECTED socket event handler..
 						log('REGISTERED USER-CONNECTED HANDLER..')
 						socket.on('user-connected', (userId) => {
-							alert('EVENT::user-connected')
+							// alert('EVENT::user-connected')
 
 							log('user connected:', userId)
 
@@ -224,18 +249,30 @@ const Room = (props) => {
 			})
 	}
 
+	useEffect(() => {
+		return () => {
+			alert('ROOM COMPONENT UNMOUNTED')
+			socket.disconnect()
+
+			// On Room component unmount simply revoke the webcam and mic access. // src: https://stackoverflow.com/questions/11642926/stop-close-webcam-stream-which-is-opened-by-navigator-mediadevices-getusermedia
+			_stream.getTracks().forEach(function (track) {
+				track.stop()
+			})
+		}
+	}, [])
+
+	// FYI: Login of compoonent unmount will take care how we execute the disconnection and navigation to Home component nicely.
 	const disconnect = () => {
-		socket.disconnect()
 		navigate('/')
 	}
 	return (
 		<>
-			<div id='video-grid'>
-				<div>
-					<video ref={videoRef} className='player' />
-					<button onClick={disconnect}>Disconnect</button>
-				</div>
+			<div id='video-container'>
+				<video ref={videoRef} />
 			</div>
+			<button className='btn-disconnect' onClick={disconnect}>
+				Disconnect
+			</button>
 
 			{/* <video onCanPlay={() => paintToCanvas()} ref={videoRef} className='player' />
 			 */}
@@ -268,7 +305,7 @@ function connectToNewUser(userId, stream) {
 // const ROOM_ID = 'a0a9832h0-aw0ho-i0032j' // should come from server via uuid generator
 // const ROOM_ID = window.location.pathname.slice(1) // should come from server via uuid generator
 const ROOM_ID = 'room1'
-const id = 10 // userId
+// const id = 10 // userId
 //
 // # worked with fast-refresh-sideffect (...temp testing with react..)
 function addVideoStream(video, stream) {
