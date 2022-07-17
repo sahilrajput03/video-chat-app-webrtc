@@ -249,17 +249,46 @@ const Room = (props) => {
 			})
 	}
 
-	useEffect(() => {
-		return () => {
-			// alert('ROOM COMPONENT UNMOUNTED')
-			socket.disconnect()
+	const exitVideoCall = () => {
+		// alert('ROOM COMPONENT UNMOUNTED')
+		socket.disconnect()
 
-			// On Room component unmount simply revoke the webcam and mic access. // src: https://stackoverflow.com/questions/11642926/stop-close-webcam-stream-which-is-opened-by-navigator-mediadevices-getusermedia
-			_stream.getTracks().forEach(function (track) {
-				track.stop()
-			})
-		}
+		// On Room component unmount simply revoke the webcam and mic access. // src: https://stackoverflow.com/questions/11642926/stop-close-webcam-stream-which-is-opened-by-navigator-mediadevices-getusermedia
+		_stream.getTracks().forEach(function (track) {
+			track.stop()
+		})
+	}
+
+	// This is for component unmount event.
+	useEffect(() => {
+		return exitVideoCall
 	}, [])
+
+	/**
+	 * This is for tab close event (coz when in a video call if one user closes tab then video get struck for few seconds.)
+		So to fix that I was trying to use a tab close event so on mobile tab close event I can disconnect from video call via `exitVideoCall()`.
+		But it seems mobile browsers don't support firing such events :( SAD
+		Src: https://stackoverflow.com/a/28450204/10012446
+		SO COMMENTING BELOW CODE.
+		
+	useEffect(() => {
+		const onCloseTabCallback = (e) => {
+			alert('boo?')
+			log('boo')
+			// Closing
+			exitVideoCall()
+
+			// Necessary setup to make this callack work, src: https://bobbyhadz.com/blog/react-handle-tab-close-event
+			e.preventDefault()
+			e.returnValue = '' // this value has to be other than null and undefined.
+			log('boo')
+		}
+
+		window.addEventListener('beforeunload', onCloseTabCallback)
+
+		return () => window.removeEventListener('beforeunload', onCloseTabCallback)
+	})
+	 */
 
 	// FYI: Login of compoonent unmount will take care how we execute the disconnection and navigation to Home component nicely.
 	const disconnect = () => {
