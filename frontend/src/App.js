@@ -251,7 +251,7 @@ const Room = (props) => {
 
 	useEffect(() => {
 		return () => {
-			alert('ROOM COMPONENT UNMOUNTED')
+			// alert('ROOM COMPONENT UNMOUNTED')
 			socket.disconnect()
 
 			// On Room component unmount simply revoke the webcam and mic access. // src: https://stackoverflow.com/questions/11642926/stop-close-webcam-stream-which-is-opened-by-navigator-mediadevices-getusermedia
