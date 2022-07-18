@@ -166,8 +166,8 @@ const Room = (props) => {
 		// alert('getVideo ::FUNCTION CALLED::')
 		navigator.mediaDevices
 			.getUserMedia({
-				// video: {width: 300},
-				video: true,
+				video: {width: 320}, // and height will be 240 according to 4:3 ration.
+				// video: true,
 				audio: {
 					sampleSize: 8,
 					echoCancellation: true,
