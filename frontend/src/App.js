@@ -168,10 +168,10 @@ const Room = (props) => {
 			.getUserMedia({
 				video: {width: 320}, // and height will be 240 according to 4:3 ration.
 				// video: true,
-				audio: {
-					sampleSize: 8,
-					echoCancellation: true,
-				},
+				// audio: {
+				// 	sampleSize: 8,
+				// 	echoCancellation: true,
+				// },
 			})
 			.then((stream) => {
 				_stream = stream // bcoz we would need to close webcam and mic access manually on disconnect button event or navigating to home component directy from the Room component.
