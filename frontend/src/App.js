@@ -166,6 +166,12 @@ const Room = (props) => {
 		// alert('getVideo ::FUNCTION CALLED::')
 		navigator.mediaDevices
 			.getUserMedia({
+				// for safari: https://github.com/webrtc/samples/issues/1218
+				//
+				// try official webrtc video samples from: https://webrtc.github.io/samples/
+				//^^ Go to `record` sample, src: https://github.com/webrtc/samples/issues/1218#issuecomment-596140895
+				// TLDR: echoCancellation is not supported.
+				//
 				video: {width: 320}, // and height will be 240 according to 4:3 ration.
 				// video: true,
 				// audio: {
