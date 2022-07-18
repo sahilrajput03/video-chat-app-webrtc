@@ -11,6 +11,8 @@
 }
 video {
 	width: 300px;
+	height: 300px;
+	/* giving height coz aspect-ratior is not supported on safari currently, date: 18 July, 2022*/
 	aspect-ratio: 1;
 	border-radius: 50px;
 	object-fit: cover;
