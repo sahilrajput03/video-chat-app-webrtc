@@ -166,7 +166,8 @@ const Room = (props) => {
 		// alert('getVideo ::FUNCTION CALLED::')
 		navigator.mediaDevices
 			.getUserMedia({
-				video: {width: 300},
+				// video: {width: 300},
+				video: true,
 				audio: {
 					sampleSize: 8,
 					echoCancellation: true,
