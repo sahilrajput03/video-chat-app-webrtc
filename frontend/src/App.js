@@ -181,7 +181,7 @@ const Room = (props) => {
 				audio: true
 			})
 			.then((stream) => {
-				_stream = stream // bcoz we would need to close webcam and mic access manually on disconnect button event or navigating to home component directy from the Room component.
+				window.stream = _stream = stream // bcoz we would need to close webcam and mic access manually on disconnect button event or navigating to home component directy from the Room component.
 				// alert('got stream')
 				let video = videoRef.current // this is the reason that getVideo has to defined inside the component ~Sahil
 				video.muted = true
