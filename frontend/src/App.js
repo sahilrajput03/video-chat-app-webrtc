@@ -178,7 +178,7 @@ const Room = (props) => {
 				// 	sampleSize: 8,
 					// echoCancellation: true, // read above comments coz echoCancellatin is diabled for safari most probably.
 				// },
-				// audio: true
+				audio: true
 			})
 			.then((stream) => {
 				_stream = stream // bcoz we would need to close webcam and mic access manually on disconnect button event or navigating to home component directy from the Room component.
