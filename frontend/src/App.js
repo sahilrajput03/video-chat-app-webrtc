@@ -176,9 +176,9 @@ const Room = (props) => {
 				// video: true,
 				// audio: {
 				// 	sampleSize: 8,
-					// echoCancellation: true, // read above comments coz echoCancellatin is diabled for safari most probably.
+				// echoCancellation: true, // read above comments coz echoCancellatin is diabled for safari most probably.
 				// },
-				audio: true
+				audio: true,
 			})
 			.then((stream) => {
 				window.stream = _stream = stream // bcoz we would need to close webcam and mic access manually on disconnect button event or navigating to home component directy from the Room component.
@@ -208,6 +208,7 @@ const Room = (props) => {
 
 					// we send video to our newly connected user
 					const video = document.createElement('video')
+					video.playsInline = true
 					call.on('stream', (userVideoStream) => {
 						log('RECEIVING CALL NOWWWW')
 						// alert('ADD VIDEO STREAM')
@@ -305,7 +306,8 @@ const Room = (props) => {
 	return (
 		<>
 			<div id='video-container'>
-				<video ref={videoRef} />
+				<video playsInline ref={videoRef} />
+				{/* playsInline is to make it work for iosV15+, src: https://stackoverflow.com/a/39855524/10012446 */}
 			</div>
 			<button className='btn-disconnect' onClick={disconnect}>
 				Disconnect
@@ -327,6 +329,8 @@ function connectToNewUser(userId, stream) {
 	log(`called mypeer.call 2`)
 	const call = myPeer.call(userId, stream)
 	const video = document.createElement('video')
+	video.playsInline = true
+
 	call.on('stream', (userVideoStream) => {
 		addVideoStream(video, userVideoStream)
 	})
