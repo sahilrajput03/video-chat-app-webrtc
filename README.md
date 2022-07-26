@@ -1,5 +1,16 @@
 # README
 
+**FIX THE BLACK SCREEN BUG WITH THIS:: `playsinline` coz omegle also has this for the `video` html tag as well i.e., **
+
+Bug tracked @ apple support: https://developer.apple.com/forums/thread/690523
+
+```
+# src: https://css-tricks.com/what-does-playsinline-mean-in-web-video/
+# mdn: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-playsinline
+
+<video id="othervideo" autoplay="" playsinline="playsinline" webkit-playsinline="playsinline" style="width: 600px; height: 450px; top: 0px;"></video>
+```
+
 Brose Project @ [https://letsjoin.ml](https://letsjoin.ml)
 
 Project insights: Frontend is hosted at this same repository from `docs` folder from the `hash-router` branch.
