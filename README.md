@@ -4,6 +4,8 @@
 
 Bug tracked @ apple support: https://developer.apple.com/forums/thread/690523
 
+Another stackoverflow answer talking about this common issue to be solved using playsinline: https://stackoverflow.com/a/51432655/10012446
+
 ```
 # src: https://css-tricks.com/what-does-playsinline-mean-in-web-video/
 # mdn: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-playsinline
