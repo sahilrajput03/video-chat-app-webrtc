@@ -1,5 +1,6 @@
 # README
 
+PROJECT ALTERATION IDEA: Make it omegle like platform but for common interests only i.e., Books, Technology, News, and allow people to create several groups there then.
 
 **Brose Project @ [https://letsjoin.ml](https://letsjoin.ml)**
 
