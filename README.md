@@ -1,21 +1,9 @@
 # README
 
-**FIX THE BLACK SCREEN BUG WITH THIS:: `playsinline` coz omegle also has this for the `video` html tag as well i.e., **
 
-Bug tracked @ apple support: https://developer.apple.com/forums/thread/690523
+**Brose Project @ [https://letsjoin.ml](https://letsjoin.ml)**
 
-Another stackoverflow answer talking about this common issue to be solved using playsinline: https://stackoverflow.com/a/51432655/10012446
-
-```
-# src: https://css-tricks.com/what-does-playsinline-mean-in-web-video/
-# mdn: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-playsinline
-
-<video id="othervideo" autoplay="" playsinline="playsinline" webkit-playsinline="playsinline" style="width: 600px; height: 450px; top: 0px;"></video>
-```
-
-Brose Project @ [https://letsjoin.ml](https://letsjoin.ml)
-
-Project insights: Frontend is hosted at this same repository from `docs` folder from the `hash-router` branch.
+**Project insights: Frontend is hosted at this same repository from `docs` folder from the `hash-router` branch.**
 
 ```bash
 # Simply use below scripts to push to github and heroku for frontend and backend deployments, yo!
@@ -26,6 +14,19 @@ Project insights: Frontend is hosted at this same repository from `docs` folder 
 Help refernce: [Kyle's Video chat app @ Youtube](https://youtu.be/DvlyzDZDEq4)
 [Kyle's Github Repo](https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 
+
+- **FIX THE BLACK SCREEN BUG WITH THIS:: `playsinline` coz omegle also has this for the `video` html tag as well i.e., **
+
+> Bug tracked @ apple support: https://developer.apple.com/forums/thread/690523
+
+> Another stackoverflow answer talking about this common issue to be solved using playsinline: https://stackoverflow.com/a/51432655/10012446
+
+	```
+	# src: https://css-tricks.com/what-does-playsinline-mean-in-web-video/
+	# mdn: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-playsinline
+
+	<video id="othervideo" autoplay="" playsinline="playsinline" webkit-playsinline="playsinline" style="width: 600px; height: 450px; top: 0px;"></video>
+	```
 
 #### Guide to publish a nested project folder serving to heroku:**
 
