@@ -1,6 +1,9 @@
 # README
 
-PROJECT ALTERATION IDEA: Make it omegle like platform but for common interests only i.e., Books, Technology, News, and allow people to create several groups there then.
+- Help refernce: [Kyle's Video chat app @ Youtube](https://youtu.be/DvlyzDZDEq4)
+	- [Kyle's Github Repo](https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
+
+*PROJECT ALTERATION IDEA: Make it omegle like platform but for common interests only i.e., Books, Technology, News, and allow people to create several groups there then.*
 
 **Brose Project @ [https://letsjoin.ml](https://letsjoin.ml)**
 
@@ -11,10 +14,6 @@ PROJECT ALTERATION IDEA: Make it omegle like platform but for common interests o
 ./pushToGithubPages.sh
 ./pushToHeoku.sh 
 ```
-
-Help refernce: [Kyle's Video chat app @ Youtube](https://youtu.be/DvlyzDZDEq4)
-[Kyle's Github Repo](https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
-
 
 - **FIX THE BLACK SCREEN BUG WITH THIS:: `playsinline` coz omegle also has this for the `video` html tag as well i.e.,**
 
